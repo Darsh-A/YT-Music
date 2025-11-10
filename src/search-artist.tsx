@@ -43,11 +43,7 @@ export default function SearchArtist() {
       throttle
     >
       {artists.length === 0 && searchText.trim() && !isLoading ? (
-        <List.EmptyView
-          icon={Icon.Person}
-          title="No Artists Found"
-          description="Try a different search term"
-        />
+        <List.EmptyView icon={Icon.Person} title="No Artists Found" description="Try a different search term" />
       ) : (
         artists.map((artist) => (
           <List.Item
@@ -57,11 +53,7 @@ export default function SearchArtist() {
             accessories={artist.subscriberCount ? [{ text: artist.subscriberCount }] : []}
             actions={
               <ActionPanel>
-                <Action.Push
-                  title="Show Details"
-                  icon={Icon.Eye}
-                  target={<ArtistDetail artist={artist} />}
-                />
+                <Action.Push title="Show Details" icon={Icon.Eye} target={<ArtistDetail artist={artist} />} />
                 <Action.OpenInBrowser title="Open in YouTube Music" url={artist.url} icon={Icon.Globe} />
                 <Action.CopyToClipboard
                   title="Copy URL"
