@@ -1,38 +1,38 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "youtube-music",
-  "title": "Youtube Music",
-  "description": "Does stuff in youtube music",
+  "title": "YT Music",
+  "description": "Search and browse YouTube Music songs, artists, playlists, and albums",
   "icon": "extension-icon.png",
   "license": "MIT",
   "commands": [
     {
       "name": "search-song",
-      "title": "Search Song",
-      "description": "Returns list of songs with their details",
+      "title": "Search Songs",
+      "description": "Search for songs on YouTube Music",
       "mode": "view",
-      "subtitle": "Searches a song title"
+      "subtitle": "YT Music"
     },
     {
       "name": "search-artist",
-      "title": "Search Artist",
-      "description": "Returns list of artists with their details",
+      "title": "Search Artists",
+      "description": "Search for artists on YouTube Music",
       "mode": "view",
-      "subtitle": "searches artists"
+      "subtitle": "YT Music"
     },
     {
       "name": "search-playlist",
-      "title": "Search Playlist",
-      "description": "Returns list of playlsits with their details",
+      "title": "Search Playlists",
+      "description": "Search for playlists on YouTube Music",
       "mode": "view",
-      "subtitle": "searches playlists titles"
+      "subtitle": "YT Music"
     },
     {
       "name": "search-album",
-      "title": "Search Album",
-      "description": "Returns list of albums with their details",
+      "title": "Search Albums",
+      "description": "Search for albums on YouTube Music",
       "mode": "view",
-      "subtitle": "searches albums title"
+      "subtitle": "YT Music"
     }
   ],
   "dependencies": {
@@ -57,8 +57,8 @@
   },
   "author": "darsh-suhas-ambade",
   "platforms": [
-    "Windows",
-    "macOS"
+    "macos",
+    "windows"
   ],
   "categories": [
     "Web"
