@@ -36,7 +36,7 @@ export function AlbumDetail({ album }: AlbumDetailProps) {
         {songs.map((song, index) => (
           <List.Item
             key={song.id}
-            icon={{ source: song.thumbnail || Icon.MusicNote }}
+            icon={{ source: song.thumbnail || Icon.Music }}
             title={`${index + 1}. ${song.title}`}
             subtitle={song.artist}
             accessories={[{ text: song.duration }]}

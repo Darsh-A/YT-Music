@@ -42,12 +42,12 @@ export default function SearchSong() {
       throttle
     >
       {songs.length === 0 && searchText.trim() && !isLoading ? (
-        <List.EmptyView icon={Icon.MusicNote} title="No Songs Found" description="Try a different search term" />
+        <List.EmptyView icon={Icon.Music} title="No Songs Found" description="Try a different search term" />
       ) : (
         songs.map((song) => (
           <List.Item
             key={song.id}
-            icon={{ source: song.thumbnail || Icon.MusicNote }}
+            icon={{ source: song.thumbnail || Icon.Music }}
             title={song.title}
             subtitle={song.artist}
             accessories={[{ text: song.duration }]}
