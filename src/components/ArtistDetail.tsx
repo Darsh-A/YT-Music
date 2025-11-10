@@ -37,11 +37,7 @@ ${artist.description || "No description available."}
       actions={
         <ActionPanel>
           <Action.OpenInBrowser title="Open in YouTube Music" url={artist.url} icon={Icon.Globe} />
-          <Action.CopyToClipboard
-            title="Copy URL"
-            content={artist.url}
-            shortcut={{ modifiers: ["cmd"], key: "c" }}
-          />
+          <Action.CopyToClipboard title="Copy URL" content={artist.url} shortcut={{ modifiers: ["cmd"], key: "c" }} />
           <Action.CopyToClipboard
             title="Copy Name"
             content={artist.name}
@@ -52,4 +48,3 @@ ${artist.description || "No description available."}
     />
   );
 }
-

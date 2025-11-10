@@ -4,32 +4,110 @@ interface Preferences {
   youtubeApiKey: string;
 }
 
+interface YouTubeApiResponse {
+  items?: unknown[];
+  error?: {
+    message: string;
+  };
+}
+
+interface YouTubeSearchItem {
+  id?: {
+    videoId?: string;
+    channelId?: string;
+    playlistId?: string;
+  };
+}
+
+interface YouTubeVideo {
+  id: string;
+  snippet?: {
+    title?: string;
+    channelTitle?: string;
+    thumbnails?: {
+      medium?: {
+        url?: string;
+      };
+    };
+  };
+  contentDetails?: {
+    duration?: string;
+  };
+  statistics?: {
+    viewCount?: string;
+  };
+}
+
+interface YouTubeChannel {
+  id: string;
+  snippet?: {
+    title?: string;
+    thumbnails?: {
+      medium?: {
+        url?: string;
+      };
+    };
+    description?: string;
+  };
+  statistics?: {
+    subscriberCount?: string;
+    videoCount?: string;
+  };
+}
+
+interface YouTubePlaylist {
+  id: string;
+  snippet?: {
+    title?: string;
+    channelTitle?: string;
+    thumbnails?: {
+      medium?: {
+        url?: string;
+      };
+    };
+  };
+  contentDetails?: {
+    itemCount?: number;
+  };
+}
+
+interface YouTubePlaylistItem {
+  snippet?: {
+    resourceId?: {
+      videoId?: string;
+    };
+  };
+}
+
 const BASE_URL = "https://www.googleapis.com/youtube/v3";
 
 function getApiKey(): string {
   const preferences = getPreferenceValues<Preferences>();
-  
+
   if (!preferences.youtubeApiKey) {
     throw new Error("YouTube API key is not configured. Please add it in extension preferences.");
   }
-  
+
   return preferences.youtubeApiKey;
 }
 
-async function fetchFromYouTube(endpoint: string, params: Record<string, string | number>): Promise<any> {
+async function fetchFromYouTube(
+  endpoint: string,
+  params: Record<string, string | number>,
+): Promise<YouTubeApiResponse> {
   const apiKey = getApiKey();
   const urlParams = new URLSearchParams({
     ...params,
     key: apiKey,
   } as Record<string, string>);
-  
+
   const response = await fetch(`${BASE_URL}${endpoint}?${urlParams}`);
-  
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: { message: "Unknown error" } }));
     throw new Error(error.error?.message || `API request failed: ${response.statusText}`);
   }
-  
+
   return response.json();
 }
 
@@ -108,9 +186,9 @@ export async function searchSongs(query: string): Promise<Song[]> {
 
     if (!searchData.items || searchData.items.length === 0) return [];
 
-    const videoIds = searchData.items
-      .map((item: any) => item.id?.videoId)
-      .filter((id: string) => !!id)
+    const videoIds = (searchData.items as YouTubeSearchItem[])
+      .map((item) => item.id?.videoId)
+      .filter((id): id is string => !!id)
       .join(",");
 
     const videosData = await fetchFromYouTube("/videos", {
@@ -120,7 +198,7 @@ export async function searchSongs(query: string): Promise<Song[]> {
 
     if (!videosData.items) return [];
 
-    return videosData.items.map((video: any) => ({
+    return (videosData.items as YouTubeVideo[]).map((video) => ({
       id: video.id || "",
       title: video.snippet?.title || "Unknown Title",
       artist: video.snippet?.channelTitle || "Unknown Artist",
@@ -148,9 +226,9 @@ export async function searchArtists(query: string): Promise<Artist[]> {
 
     if (!searchData.items || searchData.items.length === 0) return [];
 
-    const channelIds = searchData.items
-      .map((item: any) => item.id?.channelId)
-      .filter((id: string) => !!id)
+    const channelIds = (searchData.items as YouTubeSearchItem[])
+      .map((item) => item.id?.channelId)
+      .filter((id): id is string => !!id)
       .join(",");
 
     const channelsData = await fetchFromYouTube("/channels", {
@@ -160,7 +238,7 @@ export async function searchArtists(query: string): Promise<Artist[]> {
 
     if (!channelsData.items) return [];
 
-    const artists = channelsData.items.map((channel: any) => ({
+    const artists = (channelsData.items as YouTubeChannel[]).map((channel) => ({
       id: channel.id || "",
       name: channel.snippet?.title || "Unknown Artist",
       thumbnail: channel.snippet?.thumbnails?.medium?.url || "",
@@ -168,13 +246,11 @@ export async function searchArtists(query: string): Promise<Artist[]> {
       subscriberCount: channel.statistics?.subscriberCount
         ? formatSubscriberCount(channel.statistics.subscriberCount)
         : undefined,
-      subscriberCountRaw: channel.statistics?.subscriberCount
-        ? parseInt(channel.statistics.subscriberCount)
-        : 0,
+      subscriberCountRaw: channel.statistics?.subscriberCount ? parseInt(channel.statistics.subscriberCount) : 0,
       description: channel.snippet?.description,
       videoCount: channel.statistics?.videoCount || "0",
     }));
-    
+
     // Sort by subscriber count (most popular first)
     return artists.sort((a, b) => (b.subscriberCountRaw || 0) - (a.subscriberCountRaw || 0));
   } catch (error) {
@@ -197,9 +273,9 @@ export async function searchPlaylists(query: string): Promise<Playlist[]> {
 
     if (!searchData.items || searchData.items.length === 0) return [];
 
-    const playlistIds = searchData.items
-      .map((item: any) => item.id?.playlistId)
-      .filter((id: string) => !!id)
+    const playlistIds = (searchData.items as YouTubeSearchItem[])
+      .map((item) => item.id?.playlistId)
+      .filter((id): id is string => !!id)
       .join(",");
 
     const playlistsData = await fetchFromYouTube("/playlists", {
@@ -209,7 +285,7 @@ export async function searchPlaylists(query: string): Promise<Playlist[]> {
 
     if (!playlistsData.items) return [];
 
-    return playlistsData.items.map((playlist: any) => ({
+    return (playlistsData.items as YouTubePlaylist[]).map((playlist) => ({
       id: playlist.id || "",
       title: playlist.snippet?.title || "Unknown Playlist",
       thumbnail: playlist.snippet?.thumbnails?.medium?.url || "",
@@ -238,9 +314,9 @@ export async function searchAlbums(query: string): Promise<Album[]> {
 
     if (!searchData.items || searchData.items.length === 0) return [];
 
-    const playlistIds = searchData.items
-      .map((item: any) => item.id?.playlistId)
-      .filter((id: string) => !!id)
+    const playlistIds = (searchData.items as YouTubeSearchItem[])
+      .map((item) => item.id?.playlistId)
+      .filter((id): id is string => !!id)
       .join(",");
 
     const playlistsData = await fetchFromYouTube("/playlists", {
@@ -252,9 +328,9 @@ export async function searchAlbums(query: string): Promise<Album[]> {
 
     // Fetch first video from each playlist to get popularity metrics
     const albumsWithPopularity = await Promise.all(
-      playlistsData.items.map(async (playlist: any) => {
+      (playlistsData.items as YouTubePlaylist[]).map(async (playlist) => {
         let popularity = 0;
-        
+
         try {
           // Get first video from playlist
           const playlistItemsData = await fetchFromYouTube("/playlistItems", {
@@ -265,7 +341,7 @@ export async function searchAlbums(query: string): Promise<Album[]> {
 
           if (playlistItemsData.items && playlistItemsData.items.length > 0) {
             const videoId = playlistItemsData.items[0].snippet?.resourceId?.videoId;
-            
+
             if (videoId) {
               // Get video statistics
               const videoData = await fetchFromYouTube("/videos", {
@@ -292,9 +368,9 @@ export async function searchAlbums(query: string): Promise<Album[]> {
           itemCount: playlist.contentDetails?.itemCount || 0,
           popularity,
         };
-      })
+      }),
     );
-    
+
     // Sort by popularity (most viewed first)
     return albumsWithPopularity.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
   } catch (error) {
@@ -316,9 +392,9 @@ export async function getPlaylistTracks(playlistId: string): Promise<Song[]> {
 
     if (!playlistItemsData.items || playlistItemsData.items.length === 0) return [];
 
-    const videoIds = playlistItemsData.items
-      .map((item: any) => item.snippet?.resourceId?.videoId)
-      .filter((id: string) => !!id)
+    const videoIds = (playlistItemsData.items as YouTubePlaylistItem[])
+      .map((item) => item.snippet?.resourceId?.videoId)
+      .filter((id): id is string => !!id)
       .join(",");
 
     if (!videoIds) return [];
@@ -330,7 +406,7 @@ export async function getPlaylistTracks(playlistId: string): Promise<Song[]> {
 
     if (!videosData.items) return [];
 
-    return videosData.items.map((video: any) => ({
+    return (videosData.items as YouTubeVideo[]).map((video) => ({
       id: video.id || "",
       title: video.snippet?.title || "Unknown Title",
       artist: video.snippet?.channelTitle || "Unknown Artist",
@@ -346,4 +422,3 @@ export async function getPlaylistTracks(playlistId: string): Promise<Song[]> {
     throw new Error("Failed to fetch playlist tracks. Please check your API key and internet connection.");
   }
 }
-
