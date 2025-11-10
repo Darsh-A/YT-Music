@@ -31,11 +31,7 @@ export function AlbumDetail({ album }: AlbumDetailProps) {
   }, [album.id]);
 
   return (
-    <List
-      isLoading={isLoading}
-      navigationTitle={album.title}
-      searchBarPlaceholder="Search songs in this album..."
-    >
+    <List isLoading={isLoading} navigationTitle={album.title} searchBarPlaceholder="Search songs in this album...">
       <List.Section title={`${album.title} by ${album.artist}`} subtitle={`${songs.length} songs`}>
         {songs.map((song, index) => (
           <List.Item
@@ -71,4 +67,3 @@ export function AlbumDetail({ album }: AlbumDetailProps) {
     </List>
   );
 }
-

@@ -42,11 +42,7 @@ export default function SearchSong() {
       throttle
     >
       {songs.length === 0 && searchText.trim() && !isLoading ? (
-        <List.EmptyView
-          icon={Icon.MusicNote}
-          title="No Songs Found"
-          description="Try a different search term"
-        />
+        <List.EmptyView icon={Icon.MusicNote} title="No Songs Found" description="Try a different search term" />
       ) : (
         songs.map((song) => (
           <List.Item

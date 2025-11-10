@@ -42,11 +42,7 @@ export default function SearchPlaylist() {
       throttle
     >
       {playlists.length === 0 && searchText.trim() && !isLoading ? (
-        <List.EmptyView
-          icon={Icon.List}
-          title="No Playlists Found"
-          description="Try a different search term"
-        />
+        <List.EmptyView icon={Icon.List} title="No Playlists Found" description="Try a different search term" />
       ) : (
         playlists.map((playlist) => (
           <List.Item
