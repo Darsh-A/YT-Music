@@ -104,13 +104,11 @@ async function fetchFromYouTube(
   const response = await fetch(`${BASE_URL}${endpoint}?${urlParams}`);
 
   if (!response.ok) {
-    const error = (await response.json().catch(() => ({
-      error: { message: "Unknown error" },
-    }))) as { error?: { message?: string } };
+    const error = await response.json().catch(() => ({ error: { message: "Unknown error" } }));
     throw new Error(error.error?.message || `API request failed: ${response.statusText}`);
   }
 
-  return (await response.json()) as YouTubeApiResponse;
+  return response.json();
 }
 
 export interface Song {
@@ -342,7 +340,7 @@ export async function searchAlbums(query: string): Promise<Album[]> {
           });
 
           if (playlistItemsData.items && playlistItemsData.items.length > 0) {
-            const videoId = (playlistItemsData.items[0] as YouTubePlaylistItem).snippet?.resourceId?.videoId;
+            const videoId = playlistItemsData.items[0].snippet?.resourceId?.videoId;
 
             if (videoId) {
               // Get video statistics
@@ -352,7 +350,7 @@ export async function searchAlbums(query: string): Promise<Album[]> {
               });
 
               if (videoData.items && videoData.items.length > 0) {
-                popularity = parseInt((videoData.items[0] as YouTubeVideo).statistics?.viewCount || "0");
+                popularity = parseInt(videoData.items[0].statistics?.viewCount || "0");
               }
             }
           }

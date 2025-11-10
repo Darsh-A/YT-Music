@@ -1,6 +1,6 @@
 # YouTube Music - Raycast Extension
 
-Browse and search YouTube Music directly from Raycast.
+Browse and search YouTube Music directly from Raycast on Windows.
 
 ## Features
 
