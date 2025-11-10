@@ -1,6 +1,6 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "youtube-music",
+  "name": "yt-music",
   "title": "YT Music",
   "description": "Search and browse YouTube Music songs, artists, playlists, and albums",
   "icon": "extension-icon.png",
