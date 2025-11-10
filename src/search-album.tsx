@@ -58,11 +58,7 @@ export default function SearchAlbum() {
             accessories={album.itemCount ? [{ text: `${album.itemCount} songs` }] : []}
             actions={
               <ActionPanel>
-                <Action.Push
-                  title="Show Songs"
-                  icon={Icon.List}
-                  target={<AlbumDetail album={album} />}
-                />
+                <Action.Push title="Show Songs" icon={Icon.List} target={<AlbumDetail album={album} />} />
                 <Action.OpenInBrowser title="Open in YouTube Music" url={album.url} icon={Icon.Globe} />
                 <Action.CopyToClipboard
                   title="Copy URL"
