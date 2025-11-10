@@ -1,0 +1,75 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "youtube-music",
+  "title": "Youtube Music",
+  "description": "Does stuff in youtube music",
+  "icon": "extension-icon.png",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "search-song",
+      "title": "Search Song",
+      "description": "Returns list of songs with their details",
+      "mode": "view",
+      "subtitle": "Searches a song title"
+    },
+    {
+      "name": "search-artist",
+      "title": "Search Artist",
+      "description": "Returns list of artists with their details",
+      "mode": "view",
+      "subtitle": "searches artists"
+    },
+    {
+      "name": "search-playlist",
+      "title": "Search Playlist",
+      "description": "Returns list of playlsits with their details",
+      "mode": "view",
+      "subtitle": "searches playlists titles"
+    },
+    {
+      "name": "search-album",
+      "title": "Search Album",
+      "description": "Returns list of albums with their details",
+      "mode": "view",
+      "subtitle": "searches albums title"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.103.0",
+    "@raycast/utils": "^2.2.1"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^2.0.4",
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.10",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "dev": "ray develop",
+    "lint": "ray lint",
+    "fix-lint": "ray lint --fix",
+    "build": "ray build",
+    "publish": "npx @raycast/api@latest publish",
+    "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1"
+  },
+  "author": "darsh_suhas_ambade",
+  "platforms": [
+    "Windows"
+  ],
+  "categories": [
+    "Applications"
+  ],
+  "preferences": [
+    {
+      "name": "youtubeApiKey",
+      "type": "password",
+      "required": false,
+      "title": "YouTube Data API Key",
+      "description": "Your YouTube Data API v3 key. Get one at https://console.cloud.google.com/apis/credentials",
+      "placeholder": "Enter your YouTube API key"
+    }
+  ]
+}
